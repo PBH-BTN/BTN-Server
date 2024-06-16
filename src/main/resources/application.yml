@@ -1,0 +1,96 @@
+spring:
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: btn-server
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: org.mariadb.jdbc.Driver
+    username: btn
+    password: btn
+    url: "jdbc:mariadb://localhost/btn?useServerPrepStmts=true&useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true"
+    clickhouse:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driverClassName: com.clickhouse.jdbc.ClickHouseDriver
+      #username: btn
+      #password: btn
+      url: "jdbc:clickhouse://localhost:8123/btn"
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 30000
+      password: ""
+      database: 1
+      #username:
+      jedis:
+        pool:
+          enabled: true
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: 20000
+  flyway:
+    enabled: true
+    validate-on-migrate: true
+    clean-disabled: true
+    locations: classpath:db/migration/mysql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 5
+oauth2:
+  github:
+    clientId: ""
+    clientSecret: ""
+    scope: "read:user user:email"
+sa-token:
+  token-name: X-BTN-Token
+  timeout: 2592000
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: true
+server:
+  address: 0.0.0.0
+  port: 7799
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+  http2:
+    enabled: true
+  root-url: "http://127.0.0.1:7799"
+metrics:
+  generate_interval: 900000
+ping-service-config:
+  allow-anonymous: true
+  min_protocol_version: 4
+  max_protocol_version: 4
+  ability:
+    submit_peers:
+      interval: 900000
+      endpoint: "${server.root-url}/ping/peers/submit"
+      random_initial_delay: 1
+    submit_bans:
+      interval: 900000
+      endpoint: "${server.root-url}/ping/bans/submit"
+      random_initial_delay: 1
+    rules:
+      interval: 900000
+      endpoint: "${server.root-url}/ping/rules/retrieve"
+      random_initial_delay: 1
+mirai:
+  config:
+    # bot的qq
+    qq: ""
+    # mirai监听的url
+    mirai-url: ""
+    # mirai中配置的verifyKey
+    verifyKey: ""
+    push-group: ""
