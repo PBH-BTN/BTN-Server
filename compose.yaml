@@ -1,0 +1,22 @@
+# For local development usage only, prod won't use docker arch
+services:
+  mariadb:
+    image: 'mariadb:latest'
+    environment:
+      - 'MARIADB_DATABASE=btn'
+      - 'MARIADB_USER=btn'
+      - 'MARIADB_PASSWORD=btn'
+      - 'MARIADB_ROOT_PASSWORD=btn'
+    ports:
+      - '3306:3306'
+  clickhouse:
+    image: 'bitnami/clickhouse:latest'
+    environment:
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'

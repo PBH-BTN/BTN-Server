@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 统计数据</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function btnFetch(endpoint) {
+            return fetch(endpoint, {
+                credentials: "include"
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>BTN 网络 - 后端服务器（临时前端）</h1>
+<p>Version: 凑合看第一版</p>
+<hr>
+
+<h2>创建 Token</h2>
+<p>临时选项，点击<a href="javascript:createToken()">创建 Token</a>。页面显示 AppId 和 AppSecret 后及时复制出来，否则一刷新就没了
+    。</p>
+
+<h2>当前信息</h2>
+<p>在线 BTN 客户端: <span id="btn-onlineClients">N/A</span><br>
+    当前已连接的 Peers: <span id="btn-onlinePeers">N/A</span><br>
+    当前处于封禁的 Peers: <span id="btn-bannedPeers">N/A</span><br>
+    当前处于由 BTN 规则封禁的 Peers: <span id="btn-bannedBtnPeers">N/A</span><br>
+    注册用户数: <span id="btn-registeredUsers">N/A</span><br>
+    注册 BTN 客户端数: <span id="btn-registeredClients">N/A</span><br>
+</p>
+
+<script>
+
+    function createToken() {
+        let name = prompt("输入 Token 名称（默认为创建日期）", new Date().toString());
+        if (name == null) {
+            name = new Date().toString();
+        }
+        postData("api/userapps", {
+            'comment': name
+        })
+            .then((data) => {
+                const appId = data.appId;
+                const appSecret = data.appSecret;
+                document.writeln("<span>AppId:       " + appId+"</span><br>");
+                document.writeln("<span>AppSecret:   " + appSecret+"</span><br>");
+            });
+    }
+
+    async function postData(url = "", data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: "POST", // *GET, POST, PUT, DELETE, etc.
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "include", // include, *same-origin, omit
+            headers: {
+                "Content-Type": "application/json",
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: "follow", // manual, *follow, error
+            referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data), // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    btnFetch("api/metric/last")
+        .then((response) => response.json())
+        .then((data) => {
+            document.getElementById("btn-onlineClients").innerText = data.onlineClients;
+            document.getElementById("btn-onlinePeers").innerText = data.onlinePeers;
+            document.getElementById("btn-bannedPeers").innerText = data.bannedPeers;
+            document.getElementById("btn-bannedBtnPeers").innerText = data.bannedBtnPeers;
+            document.getElementById("btn-registeredUsers").innerText = data.registeredUsers;
+            document.getElementById("btn-registeredClients").innerText = data.registeredClients;
+        });
+
+
+</script>
+</body>
+</html>
