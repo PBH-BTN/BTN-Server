@@ -1,2 +1,1 @@
-# BitTorrentThreadNetwork (BTN) - Server
 
