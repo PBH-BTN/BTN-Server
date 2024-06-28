@@ -21,10 +21,10 @@ public class MetricGenerator {
         SimpleDateFormat clickhouseDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String fromStr = clickhouseDateFormat.format(from);
         String toStr = clickhouseDateFormat.format(to);
-        Long onlineClients = db.queryForObject("SELECT uniqExact(`app_id`) FROM pings WHERE `insert_time` BETWEEN ? AND ?", Long.class, fromStr, toStr);
-        Long onlinePeers = db.queryForObject("SELECT uniqExact(tuple(`peer_ip`, `peer_id`)) FROM pings WHERE `insert_time` BETWEEN ? AND ?", Long.class, fromStr, toStr);
-        Long bannedPeers = db.queryForObject("SELECT uniqExact(tuple(`peer_ip`, `peer_id`)) FROM bans WHERE `insert_time` BETWEEN ? AND ?", Long.class, fromStr, toStr);
-        Long bannedBtnPeers = db.queryForObject("SELECT uniqExact(tuple(`peer_ip`, `peer_id`)) FROM bans WHERE `btn_ban` = TRUE AND `insert_time` BETWEEN ? AND ?", Long.class, fromStr, toStr);
+        Long onlineClients = db.queryForObject("SELECT uniq(`app_id`) FROM pings WHERE `insert_time` BETWEEN ? AND ?", Long.class, fromStr, toStr);
+        Long onlinePeers = db.queryForObject("SELECT uniq(tuple(`peer_ip`, `peer_id`)) FROM pings WHERE `insert_time` BETWEEN ? AND ?", Long.class, fromStr, toStr);
+        Long bannedPeers = db.queryForObject("SELECT uniq(tuple(`peer_ip`, `peer_id`)) FROM bans", Long.class);
+        Long bannedBtnPeers = db.queryForObject("SELECT uniq(tuple(`peer_ip`, `peer_id`)) FROM bans WHERE `btn_ban` = TRUE", Long.class);
         return new MetricRecord(new Timestamp(System.currentTimeMillis()), Objects.requireNonNullElse(onlineClients, 0L), Objects.requireNonNullElse(onlinePeers, 0L), Objects.requireNonNullElse(bannedPeers, 0L), Objects.requireNonNullElse(bannedBtnPeers, 0L));
     }
 }
