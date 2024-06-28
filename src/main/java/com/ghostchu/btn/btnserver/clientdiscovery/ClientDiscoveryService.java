@@ -61,7 +61,7 @@ public class ClientDiscoveryService {
             if (peerId.length() > 8) {
                 discoveryEntity.setPeerId(peerId.substring(0, 8));
             } else {
-                discoveryEntity.setId(peerId);
+                discoveryEntity.setPeerId(peerId);
             }
             discoveryEntity.setFoundBy(user);
             discoveryEntity.setFoundAt(new Timestamp(System.currentTimeMillis()));
