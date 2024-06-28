@@ -31,7 +31,7 @@ public class MetricService {
 
     @Scheduled(fixedRateString = "${metrics.generate_interval}")
     public void summaryMetrics() {
-        MetricRecord record = metricGenerator.generate(new Timestamp(Instant.now().minus(generateInterval, ChronoUnit.MILLIS).toEpochMilli()), new Timestamp(System.currentTimeMillis()));
+        MetricRecord record = metricGenerator.generate(new Timestamp(Instant.now().minus(generateInterval+15000, ChronoUnit.MILLIS).toEpochMilli()), new Timestamp(System.currentTimeMillis()));
         MetricEntity entity = new MetricEntity();
         entity.setTime(new Timestamp(System.currentTimeMillis()));
         entity.setBannedPeers(record.bannedPeers());
