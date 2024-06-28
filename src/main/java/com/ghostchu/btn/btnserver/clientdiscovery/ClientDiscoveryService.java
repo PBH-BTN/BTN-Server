@@ -55,11 +55,13 @@ public class ClientDiscoveryService {
     public void discover(UserEntity user, List<BtnPeer> peers) {
         List<ClientDiscoveryEntity> entities = peers.stream().map(bp -> {
             ClientDiscoveryEntity discoveryEntity = new ClientDiscoveryEntity();
-            discoveryEntity.setClientName(bp.getClientName());
-            if (bp.getPeerId() != null && bp.getPeerId().length() > 8) {
-                discoveryEntity.setPeerId(bp.getPeerId().substring(0, 8));
+            String clientName = bp.getClientName() == null ? "" : bp.getClientName();
+            String peerId = bp.getPeerId() == null ? "" : bp.getPeerId();
+            discoveryEntity.setClientName(clientName);
+            if (peerId.length() > 8) {
+                discoveryEntity.setPeerId(peerId.substring(0, 8));
             } else {
-                discoveryEntity.setId(bp.getPeerId());
+                discoveryEntity.setId(peerId);
             }
             discoveryEntity.setFoundBy(user);
             discoveryEntity.setFoundAt(new Timestamp(System.currentTimeMillis()));
