@@ -2,8 +2,8 @@ package com.ghostchu.btn.btnserver.metric;
 
 import com.ghostchu.btn.btnserver.metric.entity.MetricEntity;
 import com.ghostchu.btn.btnserver.metric.repository.MetricRepository;
-import com.ghostchu.btn.btnserver.userapp.UserApplicationRepository;
 import com.ghostchu.btn.btnserver.user.UserRepository;
+import com.ghostchu.btn.btnserver.userapp.UserApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +11,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -31,7 +29,9 @@ public class MetricService {
 
     @Scheduled(fixedRateString = "${metrics.generate_interval}")
     public void summaryMetrics() {
-        MetricRecord record = metricGenerator.generate(new Timestamp(Instant.now().minus(generateInterval+15000, ChronoUnit.MILLIS).toEpochMilli()), new Timestamp(System.currentTimeMillis()));
+        MetricRecord record = metricGenerator.generate(
+                new Timestamp(System.currentTimeMillis() - (generateInterval + 15000)),
+                new Timestamp(System.currentTimeMillis()));
         MetricEntity entity = new MetricEntity();
         entity.setTime(new Timestamp(System.currentTimeMillis()));
         entity.setBannedPeers(record.bannedPeers());

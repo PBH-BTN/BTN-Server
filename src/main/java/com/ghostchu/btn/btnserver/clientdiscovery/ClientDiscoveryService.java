@@ -75,8 +75,13 @@ public class ClientDiscoveryService {
         Set<String> discoveredInSingleReq = new HashSet<>();
         entities.removeIf(e -> e.getClientName().contains("Xunlei") || e.getClientName().contains("XunLei") || e.getClientName().startsWith("-XL"));
         entities.removeIf(e -> e.getPeerId().startsWith("-XL"));
+        entities.removeIf(e -> e.getPeerId().startsWith("-tt"));
+        entities.removeIf(e -> e.getPeerId().startsWith("-SP"));
         entities.removeIf(e -> e.getPeerId().startsWith("FD6"));
         entities.removeIf(e -> e.getClientName().startsWith("FDM/"));
+        entities.removeIf(e -> e.getClientName().startsWith("FD6"));
+        entities.removeIf(e -> e.getClientName().startsWith("Taipei"));
+        entities.removeIf(e -> e.getClientName().startsWith("Taipei"));
         entities.removeIf(e -> e.getClientName().startsWith("Unknown"));
         entities.removeIf(e -> e.getClientName().isBlank() && e.getPeerId().isBlank());
         entities.removeIf(entity -> !discoveredInSingleReq.add(entity.getPeerId() + "@" + entity.getClientName()));
