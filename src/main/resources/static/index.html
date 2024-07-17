@@ -67,8 +67,8 @@
     btnFetch("api/metric/last")
         .then((response) => response.json())
         .then((data) => {
-            document.getElementById("btn-onlineClients").innerText = data.onlineClients;
-            document.getElementById("btn-onlinePeers").innerText = data.onlinePeers;
+            // document.getElementById("btn-onlineClients").innerText = data.onlineClients;
+            // document.getElementById("btn-onlinePeers").innerText = data.onlinePeers;
             document.getElementById("btn-bannedPeers").innerText = data.bannedPeers;
             document.getElementById("btn-bannedBtnPeers").innerText = data.bannedBtnPeers;
             document.getElementById("btn-registeredUsers").innerText = data.registeredUsers;
