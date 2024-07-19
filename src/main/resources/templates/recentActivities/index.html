@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 最近活动</title>
+</head>
+<body>
+<h1>BTN 网络 - 最近活动</h1>
+<p>您可以在这里检查 BTN 网络上的 BTN 客户端的最近活动。如果发现可疑情况，也欢迎联系我们报告。</p>
+
+<p>术语表：</p>
+<ul>
+    <li>IP:端口：此 Peer 的互联网地址，但有时也会是 I2P、Tor 或者 Warp 等匿名网络的出口</li>
+    <li>Peer ID：由 Peer 自己生成的识别 ID，可以被 Peer 随意更换</li>
+    <li>客户端名称：此 Peer 自己声明的客户端名称，有时也会由下载器从 Peer ID 自行生成</li>
+    <li>种子识别码：不可逆向的哈希值，它并不是 info_hash。<a href="https://github.com/PBH-BTN/BTN-Spec#torrent-identifier-%E7%AE%97%E6%B3%95">了解此哈希值是如何生成的，以及如何保护您的隐私</a></li>
+    <li>种子大小：一个种子 (.torrent) 中指示的所有文件的体积的总和</li>
+    <li>(从此Peer)下载量：指我们（BTN用户）的下载器，从对方（Peer）的下载器获取的数据量</li>
+    <li>(到此Peer)上传量：指我们（BTN用户）的下载器，向对方（Peer）的下载器发送的数据量</li>
+    <li>(从此Peer)下载量：指我们（BTN用户）的下载器，从对方（Peer）的下载器获取的数据的速度</li>
+    <li>(到此Peer)上传量：指我们（BTN用户）的下载器，向对方（Peer）的下载器发送的数据的速度</li>
+    <li>(此Peer)进度：指对方（Peer）的下载器报告的下载进度（HAVE）</li>
+    <li>(下载器)进度：指我们（BTN用户）的下载器下载此 Torrent 的进度</li>
+    <li>标志：指我们（BTN用户）的下载器显示的标志，有时也被称为 uTP Flags；在 PeerBanHelper 上，所有下载器的标志都按照 LibTorrent 标准转换，但不同 BTN 客户端的实现可能有所不同</li>
+    <li>封禁模块：指示此条封禁记录由 BTN 客户端的哪个模块生成，由 BTN 客户端提供此数据</li>
+    <li>触发规则：指示此条封禁记录集中了 BTN 客户端的哪条规则，由 BTN 客户端提供此数据</li>
+</ul>
+
+<h2>用户封禁信息上报动态（最近 1000 条）</h2>
+<table style="text-align: center">
+    <tr>
+        <th style="width: auto;">IP:端口</th>
+        <th style="width: auto;">Peer ID</th>
+        <th style="width: auto;">客户端名称</th>
+        <th style="width: auto;">种子识别码</th>
+        <th style="width: auto;">种子大小</th>
+        <th style="width: auto;">(从此Peer)下载量</th>
+        <th style="width: auto;">(到此Peer)上传量</th>
+        <th style="width: auto;">(从此Peer)下载速率</th>
+        <th style="width: auto;">(到此Peer)上传速率</th>
+        <th style="width: auto;">(此Peer)进度</th>
+        <th style="width: auto;">(下载器)进度</th>
+        <th style="width: auto;">标志</th>
+        <th style="width: auto;">封禁模块</th>
+        <th style="width: auto;">触发规则</th>
+    </tr>
+    <tr th:each="ban:${banRecords}">
+        <td><abbr th:text="${ban.addressCutted}" th:title="${ban.address}"></abbr></td>
+        <td th:text="${ban.peerId}">-BT0001-</td>
+        <td th:text="${ban.clientName}">BitTorrent/0.0.1</td>
+        <td><abbr th:title="${ban.torrentIdentifier}">查看</abbr></td>
+        <td th:text="${ban.torrentSize}">0.1GB</td>
+        <td th:text="${ban.downloaded}">1GB</td>
+        <td th:text="${ban.uploaded}">1GB</td>
+        <td th:text="${ban.rtDownloadedSpeed}">1.25MB/s</td>
+        <td th:text="${ban.rtUploadedSpeed}">1.25MB/s</td>
+        <td th:text="${ban.progress}">0%</td>
+        <td th:text="${ban.downloadProgress}">100%</td>
+        <td><abbr th:title="${ban.flags}">查看</abbr></td>
+        <td><abbr th:title="${ban.module}">查看</abbr></td>
+        <td><abbr th:text="${ban.ruleCutted()}" th:title="${ban.rule}"></abbr></td>
+    </tr>
+</table>
+<h2>用户提交信息上报动态</h2>
+<p>会有吗？会有的！</p>
+</body>
+</html>

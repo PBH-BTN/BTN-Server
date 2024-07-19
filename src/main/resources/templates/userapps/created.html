@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 已成功创建用户应用程序</title>
+</head>
+<body>
+<h1>BTN 网络 - 已成功创建用户应用程序</h1>
+
+<table style="border: red solid 4px">
+    <tr>
+        <td>注意：这些信息仅会显示一次，请保存到一个安全的位置。</td>
+    </tr>
+</table>
+
+<hr>
+
+<table style="
+padding: 1em;
+border-spacing: 1em;
+margin: 0 auto;
+ border: dashed; ">
+    <caption>BTN 网络接入信息</caption>
+    <tr>
+        <th>AppId:</th>
+        <td th:text="${userapp.appId}">这里是 AppId：很长很长很长很长很长很长很长很长很长很长</td>
+    </tr>
+    <tr>
+        <th>AppSecret:</th>
+        <td th:text="${userapp.appSecret}">这里是 AppSecret：很长很长很长很长很长很长很长很长很长很长很长很长</td>
+    </tr>
+</table>
+</body>
+</html>

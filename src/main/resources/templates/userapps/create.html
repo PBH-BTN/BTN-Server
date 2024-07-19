@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 创建 UserApp</title>
+</head>
+<body>
+<h1>BTN 网络 - 创建 Token</h1>
+
+<form th:action="@{/userapps/create}" method="post">
+    <label for="comment">起个名字吧：</label>
+    <input type="text" id="comment" name="comment" required>
+    <input type="submit" value="提交">
+</form>
+
+</body>
+</html>

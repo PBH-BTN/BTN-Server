@@ -8,7 +8,6 @@ import com.ghostchu.btn.btnserver.user.UserService;
 import com.google.common.hash.Hashing;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -51,23 +50,27 @@ public class ClientDiscoveryService {
 
     }
 
-    @Transactional
     public void discover(UserEntity user, List<BtnPeer> peers) {
         List<ClientDiscoveryEntity> entities = peers.stream().map(bp -> {
+            if(bp.getPeerId() == null
+                    || bp.getPeerId().isEmpty()
+                    || bp.getClientName() == null
+                    || bp.getClientName().isEmpty()
+            ){
+              return null;
+            }
             ClientDiscoveryEntity discoveryEntity = new ClientDiscoveryEntity();
-            String clientName = bp.getClientName() == null ? "" : bp.getClientName();
-            String peerId = bp.getPeerId() == null ? "" : bp.getPeerId();
-            discoveryEntity.setClientName(clientName);
-            if (peerId.length() > 8) {
-                discoveryEntity.setPeerId(peerId.substring(0, 8));
+            discoveryEntity.setClientName(bp.getPeerId());
+            if (bp.getPeerId().length() > 8) {
+                discoveryEntity.setPeerId(bp.getPeerId().substring(0, 8));
             } else {
-                discoveryEntity.setPeerId(peerId);
+                discoveryEntity.setPeerId(bp.getPeerId());
             }
             discoveryEntity.setFoundBy(user);
             discoveryEntity.setFoundAt(new Timestamp(System.currentTimeMillis()));
             discoveryEntity.setFoundAtAddress(bp.getIpAddress());
             return discoveryEntity;
-        }).collect(Collectors.toList());
+        }).filter(Objects::nonNull).collect(Collectors.toList());
         discover(entities);
     }
 
@@ -81,8 +84,8 @@ public class ClientDiscoveryService {
         entities.removeIf(e -> e.getClientName().startsWith("FDM/"));
         entities.removeIf(e -> e.getClientName().startsWith("FD6"));
         entities.removeIf(e -> e.getClientName().startsWith("Taipei"));
-        entities.removeIf(e -> e.getClientName().startsWith("Taipei"));
         entities.removeIf(e -> e.getClientName().startsWith("Unknown"));
+        entities.removeIf(e -> e.getClientName().startsWith("A2"));
         entities.removeIf(e -> e.getClientName().isBlank() && e.getPeerId().isBlank());
         entities.removeIf(entity -> !discoveredInSingleReq.add(entity.getPeerId() + "@" + entity.getClientName()));
         // 刷进数据库

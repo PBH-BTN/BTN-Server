@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 用户应用程序</title>
+</head>
+<body>
+<h1>BTN 网络 - 用户应用程序</h1>
+
+<p>在此创建、编辑、删除用户应用程序。</p>
+
+<hr>
+
+<h2>创建应用应用程序</h2>
+
+<a th:href="@{/userapps/create}">+ 创建新应用程序</a>
+
+<h2>已创建的应用程序</h2>
+
+<table style="
+padding: 1em;
+border-spacing: 1em;
+margin: 0 auto;
+ border: dashed; ">
+    <tr>
+        <th>ID</th>
+        <th>AppId</th>
+        <th>创建于</th>
+        <th>备注</th>
+        <th>操作</th>
+    </tr>
+
+    <tr th:each="userapp:${userapps}">
+        <td th:text="${userapp.id}">ID</td>
+        <td th:text="${userapp.appId}">AppId</td>
+        <td th:text="${userapp.createdAt}">2024-01-01 00:00:00</td>
+        <td th:text="${userapp.comment}">无备注</td>
+        <td>
+            <a th:href="@{/userapps/delete(id=${userapp.id})}">删除</a>
+            <a th:href="@{/userapps/reset(id=${userapp.id})}">重置 Token</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 仪表盘</title>
+</head>
+<body>
+<h1>BTN 网络 - 仪表盘</h1>
+<p>欢迎加入 BTN 网络！全称 BitTorrent Threat Network（BT威胁网络），它互联起了各个兼容 BTN
+    协议的客户端，并通过这些客户端上报的数据，在服务器上执行分析并生成在线规则，并推送给您。</p>
+<hr>
+<table style="border: solid 4px red">
+    <tr>
+        <td><b>正在施工！</b>页面正在装修施工中，可能时常崩坏。</td>
+    </tr>
+</table>
+<hr>
+<div style="margin: 2em">
+    功能导航：
+    <a th:href="@{/userapps}">用户应用程序管理（创建Token请点这里）</a> |
+    <a th:href="@{/recentActivities}">最近活动</a> |
+    <a th:href="@{/rep}">IP 信誉系统（施工中）</a> |
+    <a th:href="@{/clientDiscovery}">特征发现（施工中）</a> |
+    <a th:href="https://www.bilibili.com/video/BV1GJ411x7h7/">以及……未来的更多功能！</a>
+</div>
+<hr>
+<h2>统计数据</h2>
+<p>这里应该有一个图表和一些数据，而且曾经也确实有一个图表和数据，但总之，现在还没有加回来。soon™</p>
+<h2>常见问题</h2>
+<h4>为什么有时我打开这个页面提示 Error 1033 - Argon Tunnel error?</h4>
+<p>经费有限，还望理解，暂时无法解决此问题。请考虑在 <a href="https://afdian.com/a/Ghost_chu">爱发电</a> 上支持我们，这样我们就买的起好一些的
+    CDN 和服务器了！</p>
+<h4>为什么我的 PBH 提示网络错误/提示数据提交失败？</h4>
+<p>原因同上。</p>
+<h4>我必须要把我的数据提交给你们才能获取规则吗？我不是很想把数据给你们</h4>
+<p>取决于您的 BTN 客户端实现。如果您正在使用 PeerBanHelper，请设置 config.yml 中 btn.submit 为 false。这样，PeerBanHelper
+    就会进入只读模式，不会向 BTN 服务器提交数据，仅获取在线规则。当然，我们仍然建议您保持此功能启用。</p>
+<h4>为什么页面这么简陋</h4>
+<p><s>It just works, and looks pretty professional.</s><br>
+    我们没有前端，就先这样凑活看吧。</p>
+<h4>规则是自动生成的吗？</h4>
+<p>我们的最终目标是利用人工智能自动生成。现阶段，主要还是人工的智能。</p>
+</body>
+<hr>
+<footer>
+    <div style="margin: 0 auto; text-align: center"><p>会有备案号吗？会有的！</p></div>
+</footer>
+</html>
