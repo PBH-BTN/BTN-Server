@@ -1,9 +1,12 @@
 package com.ghostchu.btn.btnserver.util;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FormatUtil {
     private static final DecimalFormat df = new DecimalFormat("0.00%");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static String fileSizeToText(long size) {
         double unit = 1024D, sizeUnit = unit;
         String[] sizes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
@@ -24,6 +27,13 @@ public class FormatUtil {
 
     public static DecimalFormat getPercentageFormatter() {
         return df;
+    }
+
+    public static String formatDate(Date date) {
+        return dateFormat.format(date);
+    }
+    public static String formatDate(long l) {
+        return dateFormat.format(l);
     }
 
 }

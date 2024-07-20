@@ -43,7 +43,7 @@ public class RecentActivitiesService {
                     ban.flag(),
                     ban.module(),
                     ban.rule(),
-                    ban.rule().length() > 20 ? ban.rule().substring(0, 20) : ban.rule()
+                    ban.rule().length() > 40 ? ban.rule().substring(0, 40) : ban.rule()
             );
         }).toList();
     }

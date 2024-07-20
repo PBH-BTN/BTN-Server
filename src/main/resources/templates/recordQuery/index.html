@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>BTN 网络 - 记录查询</title>
+</head>
+<body>
+<h1>BTN 网络 - 记录查询</h1>
+<p>感觉某个 IP/客户端很可疑？记录查询功能可以允许您查询相关联的 BTN 上报记录。如果需要使用通配符查询，请使用 "%" 符号。</p>
+<p>如：我需要查询 1.2.3.* 的 IP 地址，则应该输入：1.2.3.%。</p>
+<hr>
+<h2>查询条件</h2>
+<p>IP 地址：暂不支持 CIDR，可使用通配符查询。<br>
+    PeerID：注意部分客户端（如：Transmission）可能不支持提供 PeerID。建议查询时，使用通配符匹配后续内容。使用 IP 规则封禁时，PeerId
+    可能为空。<br>
+    ClientName：注意部分Peer和下载器连接时，因不支持客户端名称扩展协议，它们可能不会提供 ClientName。使用 IP
+    规则封禁时，ClientName 可能为空。<br>
+</p>
+<form th:action="@{/recordQuery/query}" method="get">
+    <fieldset>
+        <legend>过滤器</legend>
+        <div>
+            <label for="ip">按 IP 地址查询：</label>
+            <input type="text" id="ip" name="ip"><br>
+        </div>
+        <div>
+            <label for="peerId">按 PeerId 查询：</label>
+            <input type="text" id="peerId" name="peerId"><br>
+        </div>
+        <div>
+            <label for="clientName">按 ClientName 查询：</label>
+            <input type="text" id="clientName" name="clientName"><br>
+        </div>
+        <div>
+            <label for="onlyBans">仅显示封禁记录：</label>
+            <input type="checkbox" id="onlyBans" name="onlyBans"><br>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>过滤器查询条件连接方式</legend>
+        <div>
+            <input type="radio" id="and" name="connector" value="and" checked/>
+            <label for="and">AND（和）</label>
+        </div>
+        <div>
+            <input type="radio" id="or" name="connector" value="or"/>
+            <label for="or">OR（或）</label>
+        </div>
+    </fieldset>
+    <input type="submit" value="执行查询操作">
+</form>
+<!-- 咕咕咕咕咕咕咕！ -->
+<!--<h2>按 Info Hash / 种子特征码 查询</h2>-->
+<!--<p>BTN 不收集种子名称，因此您无法通过种子名称搜索记录。您必须首先支持种子的 Info Hash 或者种子特征码。</p>-->
+<!--<p>Info Hash 转换到种子特征码是单向的，您无法通过种子特征码直接将其倒推为 Info Hash。在使用 Info Hash 查询时，Info Hash 将首先通过统一算法哈希为种子特征码。因此最后查询结果如果和您输入的 Info Hash 不同，属于正常现象。</p>-->
+<!--<p>对于混合种子 (Hybird Torrent)，您需要为 v1 info_hash 和 v2 info_hash 分别进行查询以获取完整数据。</p>-->
+<!--<form th:action="@{/recordQuery/queryInfoHash}" method="post">-->
+<!--    <label for="infoHash">按 Info Hash 查询：</label>-->
+<!--    <input type="text" id="infoHash" name="infoHash" required>-->
+<!--    <input type="submit" value="查询">-->
+<!--</form>-->
+<!--<form th:action="@{/recordQuery/queryTorrentIdentifier}" method="post">-->
+<!--    <label for="torrentIdentifier">按种子特征码查询：</label>-->
+<!--    <input type="text" id="torrentIdentifier" name="torrentIdentifier" required>-->
+<!--    <input type="submit" value="查询">-->
+<!--</form>-->
+</body>
+</html>

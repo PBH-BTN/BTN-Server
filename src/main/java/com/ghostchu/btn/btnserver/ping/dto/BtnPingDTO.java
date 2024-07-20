@@ -3,7 +3,7 @@ package com.ghostchu.btn.btnserver.ping.dto;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 
-public record BtnBanDTO (
+public record BtnPingDTO(
         Timestamp populateTime,
         Timestamp insertTime,
         long userId,
@@ -23,10 +23,6 @@ public record BtnBanDTO (
         double progress,
         double downloadProgress,
         String flag,
-        boolean btnBan,
-        String module,
-        String rule,
-        String banUniqueId,
         InetAddress submitterIp
 ){
 }

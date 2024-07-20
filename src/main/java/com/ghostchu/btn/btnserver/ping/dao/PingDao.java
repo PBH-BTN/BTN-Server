@@ -5,6 +5,8 @@ import com.ghostchu.btn.btnserver.ping.bean.BtnBanPing;
 import com.ghostchu.btn.btnserver.ping.bean.BtnPeer;
 import com.ghostchu.btn.btnserver.ping.bean.BtnPeerPing;
 import com.ghostchu.btn.btnserver.ping.dto.BtnBanDTO;
+import com.ghostchu.btn.btnserver.ping.dto.BtnPingDTO;
+import com.ghostchu.btn.btnserver.recordquery.bean.QueryResultDTO;
 import inet.ipaddr.IPAddress;
 import inet.ipaddr.IPAddressString;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -12,17 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.net.InetAddress;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class PingDao {
@@ -35,38 +38,7 @@ public class PingDao {
     private JdbcTemplate clickhouse;
 
     public List<BtnBanDTO> fetchRecentBans(int size) throws SQLException {
-        List<BtnBanDTO> list = new ArrayList<>();
-        List<Map<String, Object>> results = clickhouse.queryForList("SELECT * FROM bans LIMIT " + size);
-        results.forEach(map -> {
-
-            list.add(new BtnBanDTO(
-                    (LocalDateTime) map.get("populate_time"),
-                    (LocalDateTime) map.get("insert_time"),
-                    ((Number) map.get("user_id")).intValue(),
-                    (String) map.get("app_id"),
-                    (String) map.get("app_secret"),
-                    (String) map.get("submit_id"),
-                    (InetAddress) map.get("peer_ip"),
-                    (String) map.get("peer_id"),
-                    ((Number) map.get("peer_port")).intValue(),
-                    (String) map.get("client_name"),
-                    (String) map.get("torrent_identifier"),
-                    ((Number) map.get("torrent_size")).longValue(),
-                    ((Number) map.get("downloaded")).longValue(),
-                    ((Number) map.get("uploaded")).longValue(),
-                    ((Number) map.get("rt_download_speed")).longValue(),
-                    ((Number) map.get("rt_upload_speed")).longValue(),
-                    ((Number) map.get("progress")).doubleValue(),
-                    ((Number) map.get("downloader_progress")).doubleValue(),
-                    (String) map.get("flag"),
-                    (Boolean) map.get("btn_ban"),
-                    (String) map.get("module"),
-                    (String) map.get("rule"),
-                    (String) map.get("ban_unique_id"),
-                    (InetAddress) map.get("submitter_ip")
-            ));
-        });
-        return list;
+        return clickhouse.query("SELECT * FROM bans ORDER BY insert_time DESC LIMIT " + size, new BanRowMapper());
     }
 
     public void insertBan(BtnBanPing ping, IPAddress submitterAddress, long userId, String appId, String appSecret, String submitId) {
@@ -148,6 +120,67 @@ public class PingDao {
                 return connections.size();
             }
         });
+    }
+
+    public static class PingRowMapper implements RowMapper<BtnPingDTO> {
+
+        @Override
+        public BtnPingDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new BtnPingDTO(
+                    rs.getTimestamp("populate_time"),
+                    rs.getTimestamp("insert_time"),
+                    rs.getLong("user_id"),
+                    rs.getString("app_id"),
+                    rs.getString("app_secret"),
+                    rs.getString("submit_id"),
+                    rs.getObject("peer_ip", InetAddress.class),
+                    rs.getString("peer_id"),
+                    rs.getInt("peer_port"),
+                    rs.getString("client_name"),
+                    rs.getString("torrent_identifier"),
+                    rs.getLong("torrent_size"),
+                     rs.getLong("downloaded"),
+                     rs.getLong("uploaded"),
+                     rs.getLong("rt_download_speed"),
+                     rs.getLong("rt_upload_speed"),
+                     rs.getLong("progress"),
+                     rs.getLong("downloader_progress"),
+                    rs.getString("flag"),
+                    rs.getObject("peer_ip", InetAddress.class)
+            );
+        }
+    }
+    public static class BanRowMapper implements RowMapper<BtnBanDTO> {
+
+        @Override
+        public BtnBanDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new BtnBanDTO(
+                    rs.getTimestamp("populate_time"),
+                    rs.getTimestamp("insert_time"),
+                    rs.getLong("user_id"),
+                    rs.getString("app_id"),
+                    rs.getString("app_secret"),
+                    rs.getString("submit_id"),
+                    rs.getObject("peer_ip", InetAddress.class),
+                    rs.getString("peer_id"),
+                    rs.getInt("peer_port"),
+                    rs.getString("client_name"),
+                    rs.getString("torrent_identifier"),
+                    rs.getLong("torrent_size"),
+                    rs.getLong("downloaded"),
+                    rs.getLong("uploaded"),
+                    rs.getLong("rt_download_speed"),
+                    rs.getLong("rt_upload_speed"),
+                    rs.getLong("progress"),
+                    rs.getLong("downloader_progress"),
+                    rs.getString("flag"),
+                    rs.getBoolean("btn_ban"),
+                    rs.getString("module"),
+                    rs.getString("rule"),
+                    rs.getString("ban_unique_id"),
+                    rs.getObject("peer_ip", InetAddress.class)
+            );
+        }
     }
 
 }

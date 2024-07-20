@@ -26,18 +26,16 @@
     <li>触发规则：指示此条封禁记录集中了 BTN 客户端的哪条规则，由 BTN 客户端提供此数据</li>
 </ul>
 
-<h2>用户封禁信息上报动态（最近 1000 条）</h2>
+<h2>用户封禁信息上报动态（最近 500 条）</h2>
 <table style="text-align: center">
     <tr>
-        <th style="width: auto;">IP:端口</th>
+        <th style="width: auto;">IP 地址</th>
         <th style="width: auto;">Peer ID</th>
         <th style="width: auto;">客户端名称</th>
         <th style="width: auto;">种子识别码</th>
         <th style="width: auto;">种子大小</th>
-        <th style="width: auto;">(从此Peer)下载量</th>
-        <th style="width: auto;">(到此Peer)上传量</th>
-        <th style="width: auto;">(从此Peer)下载速率</th>
-        <th style="width: auto;">(到此Peer)上传速率</th>
+        <th style="width: auto;">传输量</th>
+        <th style="width: auto;">传输带宽</th>
         <th style="width: auto;">(此Peer)进度</th>
         <th style="width: auto;">(下载器)进度</th>
         <th style="width: auto;">标志</th>
@@ -50,15 +48,13 @@
         <td th:text="${ban.clientName}">BitTorrent/0.0.1</td>
         <td><abbr th:title="${ban.torrentIdentifier}">查看</abbr></td>
         <td th:text="${ban.torrentSize}">0.1GB</td>
-        <td th:text="${ban.downloaded}">1GB</td>
-        <td th:text="${ban.uploaded}">1GB</td>
-        <td th:text="${ban.rtDownloadedSpeed}">1.25MB/s</td>
-        <td th:text="${ban.rtUploadedSpeed}">1.25MB/s</td>
+        <td>↑<span th:text="${ban.uploaded}"></span><br>↓<span th:text="${ban.downloaded}"></span></td>
+        <td>↑<span th:text="${ban.rtUploadedSpeed}"></span><br>↓<span th:text="${ban.rtDownloadedSpeed()}"></span></td>
         <td th:text="${ban.progress}">0%</td>
         <td th:text="${ban.downloadProgress}">100%</td>
         <td><abbr th:title="${ban.flags}">查看</abbr></td>
         <td><abbr th:title="${ban.module}">查看</abbr></td>
-        <td><abbr th:text="${ban.ruleCutted()}" th:title="${ban.rule}"></abbr></td>
+        <td><abbr th:text="${ban.ruleCutted}" th:title="${ban.rule}"></abbr></td>
     </tr>
 </table>
 <h2>用户提交信息上报动态</h2>
