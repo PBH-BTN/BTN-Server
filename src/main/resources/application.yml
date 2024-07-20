@@ -76,15 +76,15 @@ ping-service-config:
   max_protocol_version: 4
   ability:
     submit_peers:
-      interval: 900000
+      interval: 600000
       endpoint: "${server.root-url}/ping/peers/submit"
       random_initial_delay: 1
     submit_bans:
-      interval: 900000
+      interval: 600000
       endpoint: "${server.root-url}/ping/bans/submit"
       random_initial_delay: 1
     rules:
-      interval: 900000
+      interval: 600000
       endpoint: "${server.root-url}/ping/rules/retrieve"
       random_initial_delay: 1
 mirai:
