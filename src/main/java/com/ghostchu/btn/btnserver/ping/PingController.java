@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import inet.ipaddr.IPAddress;
 import inet.ipaddr.IPAddressString;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/ping")
+@Transactional
 @Slf4j
 public class PingController {
     private final UUID configVersion = UUID.randomUUID();
@@ -148,13 +150,10 @@ public class PingController {
 
     private ResponseEntity<String> checkIfInvalidPBH() throws JsonProcessingException {
         String ua = req.getHeader("User-Agent");
-        log.warn("Rejecting {} ({}) BTN submit requests.", ServletUtil.getIP(req), ua);
-
-        if(ua.startsWith("PeerBanHelper/5.0.2")
-                ||ua.startsWith("PeerBanHelper/5.0.3")
-                ||ua.startsWith("PeerBanHelper/5.0.4")){
+        if(ua.startsWith("PeerBanHelper/5.0.2") ||ua.startsWith("PeerBanHelper/5.0.3") ||ua.startsWith("PeerBanHelper/5.0.4")||ua.startsWith("PeerBanHelper/5.0.5")){
+            //log.warn("Rejecting {} ({}) BTN submit requests.", ServletUtil.getIP(req), ua);
             return ResponseEntity.status(403).contentType(MediaType.APPLICATION_JSON)
-                    .body(objectMapper.writeValueAsString(Map.of("message","您正在使用的 PeerBanHelper 客户端版本（>5.0.1 && <=5.0.4）因程序错误而被禁止向 BTN 提交数据。请更换到受支持的客户端版本。")));
+                    .body(objectMapper.writeValueAsString(Map.of("message","您正在使用的 PeerBanHelper 客户端版本（>5.0.1 && <=5.0.5）因程序错误而被禁止向 BTN 提交数据。请更换到受支持的客户端版本。")));
         }
         return null;
     }

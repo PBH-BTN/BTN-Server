@@ -1,7 +1,9 @@
 package com.ghostchu.btn.btnserver.clientdiscovery;
 
 import com.ghostchu.btn.btnserver.user.UserEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -22,7 +24,6 @@ public interface ClientDiscoveryRepository extends CrudRepository<ClientDiscover
     List<ClientDiscoveryEntity> findByFoundBy(UserEntity foundBy);
 
     List<ClientDiscoveryEntity> findByFoundBy_Id(Integer id);
-
 
     @Query(value = "INSERT IGNORE INTO table (peerId, clientName, foundBy, foundAtAddress, foundAt) values (?, ?, ?, ?, ?)", nativeQuery = true)
     List<ClientDiscoveryEntity> writeButIgnore(List<ClientDiscoveryEntity> entities);
