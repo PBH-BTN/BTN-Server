@@ -148,6 +148,8 @@ public class PingController {
 
     private ResponseEntity<String> checkIfInvalidPBH() throws JsonProcessingException {
         String ua = req.getHeader("User-Agent");
+        log.warn("Rejecting {} ({}) BTN submit requests.", ServletUtil.getIP(req), ua);
+
         if(ua.startsWith("PeerBanHelper/5.0.2")
                 ||ua.startsWith("PeerBanHelper/5.0.3")
                 ||ua.startsWith("PeerBanHelper/5.0.4")){
