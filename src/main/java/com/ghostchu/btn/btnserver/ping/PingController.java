@@ -1,5 +1,6 @@
 package com.ghostchu.btn.btnserver.ping;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ghostchu.btn.btnserver.bean.ClientAuthenticationCredential;
 import com.ghostchu.btn.btnserver.exception.AccessDeniedException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -59,7 +61,11 @@ public class PingController {
     private HttpServletRequest req;
 
     @PostMapping("/peers/submit")
-    public ResponseEntity<String> submitPeers(@RequestBody @Validated BtnPeerPing ping) throws AccessDeniedException {
+    public ResponseEntity<String> submitPeers(@RequestBody @Validated BtnPeerPing ping) throws AccessDeniedException, JsonProcessingException {
+        var checkResult = checkIfInvalidPBH();
+        if(checkResult != null) {
+            return checkResult;
+        }
         ClientAuthenticationCredential cred = ServletUtil.getAuthenticationCredential(req);
         cred.verifyOrThrow();
         log.info("[DEBUG] Submit peers request from client {} with AppId={} and AppSecret={}", ServletUtil.getIP(req), cred.appId(), cred.appSecret());
@@ -69,7 +75,11 @@ public class PingController {
     }
 
     @PostMapping("/bans/submit")
-    public ResponseEntity<String> submitBans(@RequestBody @Validated BtnBanPing ping) throws AccessDeniedException {
+    public ResponseEntity<String> submitBans(@RequestBody @Validated BtnBanPing ping) throws AccessDeniedException, JsonProcessingException {
+        var checkResult = checkIfInvalidPBH();
+        if(checkResult != null) {
+            return checkResult;
+        }
         ClientAuthenticationCredential cred = ServletUtil.getAuthenticationCredential(req);
         cred.verifyOrThrow();
         log.info("[DEBUG] Submit bans request from client {} with AppId={} and AppSecret={}", ServletUtil.getIP(req), cred.appId(), cred.appSecret());
@@ -134,5 +144,16 @@ public class PingController {
         btn.setVersion(rev);
         log.info("Send new rule to user {} - {} -> {}", ServletUtil.getIP(req), cred.appId(), rev);
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(btn));
+    }
+
+    private ResponseEntity<String> checkIfInvalidPBH() throws JsonProcessingException {
+        String ua = req.getHeader("User-Agent");
+        if(ua.startsWith("PeerBanHelper/5.0.2")
+                ||ua.startsWith("PeerBanHelper/5.0.3")
+                ||ua.startsWith("PeerBanHelper/5.0.4")){
+            return ResponseEntity.status(403).contentType(MediaType.APPLICATION_JSON)
+                    .body(objectMapper.writeValueAsString(Map.of("message","您正在使用的 PeerBanHelper 客户端版本（>5.0.1 && <=5.0.4）因程序错误而被禁止向 BTN 提交数据。请更换到受支持的客户端版本。")));
+        }
+        return null;
     }
 }
