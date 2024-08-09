@@ -60,7 +60,7 @@ public class ClientDiscoveryService {
               return null;
             }
             ClientDiscoveryEntity discoveryEntity = new ClientDiscoveryEntity();
-            discoveryEntity.setClientName(bp.getPeerId());
+            discoveryEntity.setClientName(bp.getClientName());
             if (bp.getPeerId().length() > 8) {
                 discoveryEntity.setPeerId(bp.getPeerId().substring(0, 8));
             } else {

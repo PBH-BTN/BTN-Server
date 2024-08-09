@@ -87,6 +87,7 @@ ping-service-config:
       interval: 600000
       endpoint: "${server.root-url}/ping/rules/retrieve"
       random_initial_delay: 1
+      auto_generated_rule_untrusted_thresholds: 2
 mirai:
   config:
     # bot的qq

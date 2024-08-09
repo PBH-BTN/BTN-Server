@@ -15,4 +15,6 @@ public class RuleEntityDto implements Serializable {
     private String category;
     private String type;
     private String content;
+    private long addAt;
+    private long expireAt;
 }

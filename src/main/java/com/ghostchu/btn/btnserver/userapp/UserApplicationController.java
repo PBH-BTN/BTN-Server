@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller()
@@ -33,6 +34,26 @@ public class UserApplicationController {
     @GetMapping("/create")
     public String creatingUserApps(Model model) throws AccessDeniedException {
         return "userapps/create";
+    }
+
+    @GetMapping("/delete")
+    public String creatingUserApps(Model model,@RequestParam("id") Integer id ) throws AccessDeniedException {
+        UserEntity user = userService.me();
+        if(id == null){
+            model.addAttribute("error", "未传递应用程序 ID");
+            return "common/error";
+        }
+        var userApp = service.getUserApplication(id);
+        if(userApp.isEmpty()){
+            model.addAttribute("error", "应用程序不存在");
+            return "common/error";
+        }
+        if(!Objects.equals(user.getId(), userApp.get().getUser().getId())){
+            model.addAttribute("error", "鉴权操作失败，您非此用户应用程序的创建者");
+            return "common/error";
+        }
+        service.deleteUserApp(id);
+        return "redirect:/userapps";
     }
 
     @PostMapping("/create")

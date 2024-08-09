@@ -22,6 +22,9 @@ public class UserApplicationService {
         return repository.findByUser(user);
     }
 
+
+
+
     public void deleteUserApp(Integer userAppId){
         repository.deleteById(userAppId);
     }

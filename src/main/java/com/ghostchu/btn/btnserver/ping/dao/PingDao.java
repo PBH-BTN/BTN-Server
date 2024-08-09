@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -39,6 +40,17 @@ public class PingDao {
 
     public List<BtnBanDTO> fetchRecentBans(int size) throws SQLException {
         return clickhouse.query("SELECT * FROM bans ORDER BY insert_time DESC LIMIT " + size, new BanRowMapper());
+    }
+
+    public List<String> fetchUntrustedBans(int having){
+        return clickhouse.query("""
+                SELECT replaceRegexpOne(IPv6NumToString(peer_ip), '^::ffff:', '') AS ip
+                            FROM btn3.bans
+                            WHERE module LIKE '%ProgressCheatBlocker%'
+                            AND insert_time >= now() - INTERVAL 14 DAY
+                            GROUP BY peer_ip
+                            HAVING COUNT(DISTINCT app_id) >= 2 ORDER BY peer_ip ASC
+                """, new SingleColumnRowMapper<>(String.class));
     }
 
     public void insertBan(BtnBanPing ping, IPAddress submitterAddress, long userId, String appId, String appSecret, String submitId) {

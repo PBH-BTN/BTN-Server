@@ -7,6 +7,7 @@ import com.ghostchu.btn.btnserver.ping.bean.BtnBanPing;
 import com.ghostchu.btn.btnserver.ping.bean.BtnPeerPing;
 import com.ghostchu.btn.btnserver.ping.bean.BtnRule;
 import com.ghostchu.btn.btnserver.ping.dao.PingDao;
+import com.ghostchu.btn.btnserver.rule.RuleEntity;
 import com.ghostchu.btn.btnserver.rule.RuleEntityDto;
 import com.ghostchu.btn.btnserver.rule.RuleService;
 import com.ghostchu.btn.btnserver.user.UserEntity;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,11 +38,17 @@ public class PingService {
     private PingDao dao;
     @Value("${ping-service-config.allow-anonymous}")
     private boolean allowAnonymous;
+    @Value("${ping-service-config.ability.rules.auto_generated_rule_untrusted_thresholds}")
+    private int untrustedThresholds;
     @Autowired
     private ModelMapper modelMapper;
 
     public BtnRule generateJsonRawMap() {
-        List<RuleEntityDto> rules = ruleDao.readRules().stream().map((element) -> modelMapper.map(element, RuleEntityDto.class)).toList();
+        List<RuleEntity> entities = new ArrayList<>(ruleDao.readRules(System.currentTimeMillis()));
+        entities.addAll(ruleDao.readUntrustedRules(untrustedThresholds));
+        List<RuleEntityDto> rules = entities
+                .stream()
+                .map((element) -> modelMapper.map(element, RuleEntityDto.class)).toList();
         return new BtnRule(rules);
     }
 
