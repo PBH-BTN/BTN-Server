@@ -32,6 +32,7 @@ import java.util.UUID;
 @Transactional
 @Slf4j
 public class PingController {
+    private static final int PBH_5_SAFE_VERSION = 6;
     private final UUID configVersion = UUID.randomUUID();
     @Autowired
     private PingService service;
@@ -97,10 +98,15 @@ public class PingController {
         log.info("[DEBUG] Config request from client {} with AppId={} and AppSecret={}", ServletUtil.getIP(req), cred.appId(), cred.appSecret());
         IPAddress ip = new IPAddressString(ServletUtil.getIP(req)).getAddress();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("min_protocol_version", minProtocolVersion);
-        jsonObject.addProperty("max_protocol_version", maxProtocolVersion);
+        String ua = req.getHeader("User-Agent");
+        if(ua.contains("PeerBanHelper/5")) {
+            jsonObject.addProperty("min_protocol_version", PBH_5_SAFE_VERSION);
+            jsonObject.addProperty("max_protocol_version", PBH_5_SAFE_VERSION);
+        }else{
+            jsonObject.addProperty("min_protocol_version", minProtocolVersion);
+            jsonObject.addProperty("max_protocol_version", maxProtocolVersion);
+        }
         JsonObject ability = new JsonObject();
-
         JsonObject abilitySubmitPeers = new JsonObject();
         abilitySubmitPeers.addProperty("interval", abilitySubmitPeersInterval);
         abilitySubmitPeers.addProperty("endpoint", abilitySubmitPeersEndpoint);
